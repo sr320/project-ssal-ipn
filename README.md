@@ -1,8 +1,8 @@
-# project-ssal-ipvn
+# project-ssal-ipn
 
 DNA methylation response of Atlantic salmon (*Salmo salar*) to infectious pancreatic necrosis virus (IPNV), by whole-genome bisulfite sequencing (WGBS).
 
-**Dashboard:** https://sr320.github.io/project-ssal-ipvn/ (progress and major issues; served from `docs/`)
+**Dashboard:** https://sr320.github.io/project-ssal-ipn/ (progress and major issues; served from `docs/`)
 
 ## Data
 
@@ -47,7 +47,7 @@ Gannet holds the data; Hyak (klone) only computes.
 ```bash
 ssh klone.hyak.uw.edu
 cd /gscratch/scrubbed/$USER
-git clone https://github.com/sr320/project-ssal-ipvn.git && cd project-ssal-ipvn
+git clone https://github.com/sr320/project-ssal-ipn.git && cd project-ssal-ipvn
 mkdir -p logs
 bash code/00-preflight.sh              # everything must say ok
 sbatch code/03-genome-index.sh         # can start before the reads are staged
