@@ -247,7 +247,7 @@
     <thead>
       <tr>
         <th>Library</th><th class="num">Read pairs</th><th class="num">Yield (Gb)</th><th class="num">Raw depth</th><th class="num">Q30</th>
-        <th>Raw QC</th><th class="num">Pairs kept</th><th class="num">Unique mapping</th><th class="num">Duplicates</th><th class="num">CpG meth.</th><th class="num">Conversion</th><th class="num">CpG depth</th><th class="num">CpGs ≥ 5 reads</th><th>Files on gannet</th>
+        <th>Raw QC</th><th class="num">R2 tail G, bases 15–19</th><th class="num">Adapter read-through</th><th class="num">Pairs kept</th><th class="num">Unique mapping</th><th class="num">Duplicates</th><th class="num">CpG meth.</th><th class="num">Conversion</th><th class="num">CpG depth</th><th class="num">CpGs ≥ 5 reads</th><th>Files on gannet</th>
       </tr>
     </thead>
     <tbody id="samples"></tbody>
@@ -399,6 +399,8 @@ $("samples").innerHTML = S.map((s) => {
     <td class="num">${s.depth.toFixed(1)}×</td>
     <td class="num">${s.q30.toFixed(1)}%</td>
     <td>${s.rawqc ? (G ? `<a href="${G}/qc/fastqc-raw/${s.lib}_1_fastqc.html">R1</a> · <a href="${G}/qc/fastqc-raw/${s.lib}_2_fastqc.html">R2</a>` : '<span class="okmark">✓</span>') : pend}</td>
+    <td class="num">${s.tailG != null ? s.tailG.toFixed(1) + "%" : pend}</td>
+    <td class="num">${s.adapter != null ? s.adapter.toFixed(1) + "%" : pend}</td>
     <td class="num">${pct(s.trimKept)}</td>
     <td class="num">${pct(s.mapping)}</td>
     <td class="num">${pct(s.dup)}</td>

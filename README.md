@@ -48,7 +48,8 @@ Gannet holds the data; Hyak (klone) only computes.
 | 3 | Ssal_v3.1 genome and Bismark index | `code/03-genome-index.sh` | lab partition | (kept in `/gscratch/srlab`) |
 | 4 | Trim, align in chunks, deduplicate, M-bias | `code/04-trim-align-dedup.sh` | ckpt array (18) | logs, reports, M-bias |
 | 5 | Methylation extraction, merged CpG coverage | `code/05-extract.sh` | ckpt array (18) | `output/methylation/`, `output/dedup/*.bam` |
-| 6 | MultiQC, numbers and links for the dashboard | `code/06-collect-metrics.sh` | klone login node | `output/qc/multiqc-*/` |
+| 2b | MultiQC across libraries | `code/02b-multiqc.sh` | ckpt job | `output/qc/multiqc-*/` |
+| 6 | Numbers and links for the dashboard | `code/06-collect-metrics.sh` | klone login node | |
 | 7 | Catch-up push of anything jobs could not send | `code/07-archive-to-gannet.sh` | klone login node | |
 | 8 | Sample QC: coverage, correlation, PCA | to write | Hyak job (R) | |
 | 9 | Differential methylation (DSS): G2 vs G1, G6 vs G1, G6 vs G2 | to write | Hyak job (R) | |
@@ -71,7 +72,7 @@ bash code/00-install-cutadapt.sh       # once, on a compute node (salloc); the c
 bash code/00-preflight.sh              # everything must say ok
 sbatch code/03-genome-index.sh         # can start before the reads are staged
 sbatch code/02-fastqc-raw.sh
-bash code/06-collect-metrics.sh        # builds MultiQC; review before trimming
+sbatch code/02b-multiqc.sh             # MultiQC, pushed to gannet; review before trimming
 sbatch --array=1 --export=ALL,SUBSET=200000,MAXINS=500  code/04-trim-align-dedup.sh   # pilot
 sbatch --array=1 --export=ALL,SUBSET=200000,MAXINS=1000 code/04-trim-align-dedup.sh   # pilot
 sbatch code/04-trim-align-dedup.sh     # full run (defaults CLIP=15, MAXINS=1000)

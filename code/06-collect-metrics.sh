@@ -1,6 +1,6 @@
 #!/bin/bash
-# Gather per-library numbers for the dashboard, build the MultiQC reports,
-# push them to gannet and copy the small report files into the repository.
+# Gather per-library numbers for the dashboard and copy the small report
+# files into the repository.
 # Light enough for a klone login node; run it whenever jobs finish, then
 # commit and push:
 #   bash code/06-collect-metrics.sh && git add docs output && git commit -m "metrics" && git push
@@ -12,18 +12,13 @@ source code/00-config.sh
 field() { grep -h "$1" "${@:2}" 2>/dev/null | awk -F'\t' '{s+=$2} END{print s+0}'; }
 pctof() { awk -v a="$1" -v b="$2" 'BEGIN{ if (b>0) printf "%.1f", 100*a/b }'; }
 
-# MultiQC, pushed to gannet (asks for a password unless ssh keys are set up).
-GANNET_BATCH=0
-mq=""
-if ls "$QC"/fastqc-raw/*_fastqc.zip >/dev/null 2>&1; then
-  run multiqc -q -f -o "$QC/multiqc-raw" "$QC/fastqc-raw" && mq="$mq raw: true,"
-  cat "$QC"/fastqc-raw/*.flowcell.tsv > "$QC/flowcell-lane.tsv"
-fi
-if ls "$QC"/fastqc-trimmed/*_fastqc.zip >/dev/null 2>&1; then
-  run multiqc -q -f -o "$QC/multiqc-trimmed" "$QC/fastqc-trimmed" "$TRIM" && mq="$mq trimmed: true,"
-fi
-pushed=false
-[ -n "$mq" ] && to_gannet qc/multiqc-raw qc/multiqc-trimmed qc/flowcell-lane.tsv && pushed=true
+# MultiQC is built by code/02b-multiqc.sh (a job: the container does not
+# start on login nodes). Here we only record whether each report is on gannet.
+mq=""; pushed=false
+for k in raw trimmed; do
+  if wget --spider --quiet "$GANNET_WEB/output/qc/multiqc-$k/multiqc_report.html"; then mq="$mq $k: true,"; pushed=true; fi
+done
+[ -f "$QC/flowcell-lane.tsv" ] || cat "$QC"/fastqc-raw/*.flowcell.tsv > "$QC/flowcell-lane.tsv" 2>/dev/null
 
 out=$REPO/docs/metrics.js
 {
