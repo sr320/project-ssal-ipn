@@ -11,8 +11,12 @@
 # Methylation extraction from the deduplicated BAM of one library:
 # per-context calls, bedGraph/coverage, genome-wide CpG report, and a
 # strand-merged CpG coverage file (input for DSS / methylKit / dmrseq).
-# Set the ignore values (bp) from the M-bias plots, e.g.
-#   sbatch --export=ALL,IGNORE_R1=2,IGNORE_R2=2 code/05-extract.sh
+# Bases ignored at the 5' end of each read default to 3 for R1 and 9 for R2,
+# chosen from the M-bias table of the pilot library G1_HK1: R1 is unstable
+# over bases 1-3, and leftover adaptase tail inflates non-CpG methylation
+# over the first 9 bases of R2 (3.2% falling to the 1.1% baseline). The 3'
+# ends are flat. Override with e.g.
+#   sbatch --export=ALL,IGNORE_R1=2,IGNORE_R2=12 code/05-extract.sh
 #
 # When the library is done its outputs go to gannet: the merged CpG coverage
 # file is copied (it stays on Hyak for differential methylation), and the
@@ -31,7 +35,7 @@ mkdir -p "$METH"
 if [ ! -f "$METH/$s.done" ]; then
   if [ ! -f "$METH/$s.extract.done" ]; then
     run bismark_methylation_extractor --paired-end --no_overlap --comprehensive \
-      --ignore "${IGNORE_R1:-0}" --ignore_r2 "${IGNORE_R2:-0}" \
+      --ignore "${IGNORE_R1:-3}" --ignore_r2 "${IGNORE_R2:-9}" \
       --ignore_3prime "${IGNORE_3P_R1:-0}" --ignore_3prime_r2 "${IGNORE_3P_R2:-0}" \
       --gzip --bedGraph --buffer_size 20G \
       --cytosine_report --genome_folder "$GENOME_DIR" \

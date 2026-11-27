@@ -76,7 +76,7 @@ sbatch code/02b-multiqc.sh             # MultiQC, pushed to gannet; review befor
 sbatch --array=1 --export=ALL,SUBSET=200000,MAXINS=500  code/04-trim-align-dedup.sh   # pilot
 sbatch --array=1 --export=ALL,SUBSET=200000,MAXINS=1000 code/04-trim-align-dedup.sh   # pilot
 sbatch code/04-trim-align-dedup.sh     # full run (defaults CLIP=15, MAXINS=1000)
-sbatch --export=ALL,IGNORE_R1=0,IGNORE_R2=0 code/05-extract.sh   # values from M-bias
+sbatch code/05-extract.sh              # ignores 3 bp of R1 and 9 bp of R2 (from the pilot's M-bias)
 bash code/07-archive-to-gannet.sh      # only if jobs could not push
 bash code/06-collect-metrics.sh        # then commit and push docs/ and output/
 ```
