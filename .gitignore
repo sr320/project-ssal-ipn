@@ -5,3 +5,11 @@ logs/
 data/raw/
 data/genome/
 .claude/
+# Hyak working folders, when the clone doubles as the work directory
+/raw/
+/trim/
+/bismark/
+/dedup/
+/methylation/
+/qc/
+/pilot/
