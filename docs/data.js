@@ -2,7 +2,7 @@
    status: done | running | next | planned | blocked
    level:  serious | warning | info | resolved                        */
 const DATA = {
-  updated: "2026-11-27, experimental design recorded; pilot library running on Hyak",
+  updated: "2026-11-27 12:10 PST, all raw reads staged; pilot library aligning on Hyak",
   reports: [
     // Extra links for the Resources list. MultiQC links are added
     // automatically once code/06-collect-metrics.sh has pushed the reports.
@@ -12,14 +12,14 @@ const DATA = {
       detail: "Macrogen order HN00292532: 18 paired-end libraries (36 FASTQ files, 85 GB compressed), 2 × 151 bp, Accel-NGS Methyl-Seq. Per-library yield and quality taken from the report." },
     { title: "Workflow plan and Hyak scripts", status: "done", when: "First jobs run Nov 27",
       detail: "Plan in the README; scripts <code>code/00</code>–<code>07</code> drafted. Reads are staged on gannet and streamed to Hyak one library at a time; jobs run on the checkpoint partition and push results back to gannet. Tested on Hyak so far: preflight, fetch from gannet, raw FastQC and the push back to gannet. Trimming, alignment and extraction have not run yet." },
-    { title: "Stage raw reads on gannet", status: "running", when: "Started Nov 27 08:27",
-      detail: "<code>01-download-to-gannet.sh</code> is running on gannet, downloading all 36 files (85 GB) to <code>/volume1/v1_web/project-ssal-ipn/raw</code> and checking each against Macrogen's md5sum. Files appear in the <a href=\"https://gannet.fish.washington.edu/v1_web/project-ssal-ipn/raw/\">raw folder on gannet</a> as they arrive. Done when the log reads 36 of 36 verified. Hyak never holds more than the libraries being processed." },
+    { title: "Stage raw reads on gannet", status: "done", when: "Nov 27",
+      detail: "All 36 FASTQ files (85 GB) downloaded from Macrogen to gannet and verified against the provider's md5sums: 36 of 36 match. They are in the <a href=\"https://gannet.fish.washington.edu/v1_web/project-ssal-ipn/raw/\">raw folder on gannet</a>, with the checksums in <code>md5-verified.txt</code>. Hyak pulls one library at a time from there." },
     { title: "Reference genome and bisulfite index", status: "done", when: "Nov 27",
       detail: "Ssal_v3.1 (GCF_905237065.1) with its Bismark bowtie2 index, copied from the index built for the salmon vaccine WGBS project on raven instead of rebuilding (14 GB, all 12 index files present). Kept in lab group storage at <code>/gscratch/srlab/sr320/project-ssal-ipn/genome</code>, which is not scrubbed." },
-    { title: "Raw read QC", status: "running", when: "1 of 18 libraries",
-      detail: "<code>02-fastqc-raw.sh</code> (array of 18, ckpt): each task pulls one library from gannet, runs FastQC, records flowcell and lane, and deletes the reads. Done for the pilot library <code>G1_HK1</code> (links in the table below); the other 17 follow once staging finishes. MultiQC links appear under Resources." },
-    { title: "One-library pilot", status: "running", when: "Started Nov 27",
-      detail: "<code>G1_HK1</code> through the whole pipeline (<code>--array=1</code>), streamed from gannet. Raw QC is done. Now: the 200,000-pair test of 500 against 1,000 bp maximum fragment length (job submitted, 15 bp clip), then the full library. Gives measured mapping, duplication and CpG coverage (mean depth and share of CpGs with 5 or more reads) in place of the estimates." },
+    { title: "Raw read QC", status: "running", when: "1 of 18 done, 17 queued",
+      detail: "<code>02-fastqc-raw.sh</code> (array of 18, ckpt): each task pulls one library from gannet, runs FastQC, records flowcell and lane, and deletes the reads. Done for the pilot library <code>G1_HK1</code>; the other 17 were submitted Nov 27 at 12:05. FastQC links appear in the table below as libraries finish and the metrics are refreshed." },
+    { title: "One-library pilot", status: "running", when: "Full alignment in progress",
+      detail: "<code>G1_HK1</code> through the whole pipeline, streamed from gannet. Raw QC and the fragment-length test are done: on the first 200,000 pairs, unique mapping was 73.1% with a 1,000 bp maximum fragment length against 68.3% at Bismark's 500 bp default, so 1,000 is used. The full library (39.5 M pairs) is aligning in four chunks; one was finished at 12:00. Deduplication, M-bias and extraction follow, giving measured duplication and CpG coverage." },
     { title: "Trim, align, deduplicate", status: "planned",
       detail: "<code>04-trim-align-dedup.sh</code> (array of 18, ckpt): per library, fetch from gannet, trim adapters and the adaptase tail, align with Bismark in 10-million-pair chunks so a preempted job repeats at most one chunk, remove duplicates across chunks, write M-bias. Raw reads, trimmed reads and chunk BAMs are deleted at the end." },
     { title: "Methylation extraction and archive", status: "planned",
@@ -32,10 +32,6 @@ const DATA = {
       detail: "Place DMLs and DMRs relative to genes, promoters and repeats in the Ssal_v3.1 annotation; functional enrichment; focus on antiviral and immune genes." }
   ],
   findings: [
-    { level: "serious", tag: "Deadline",
-      title: "Download links expire two weeks after delivery",
-      body: "The Macrogen report says the links stop working two weeks after release. The report is dated Nov 26, so the cut-off is about Dec 10; the exact date is not stated. The download to gannet started Nov 27 and is in progress.",
-      action: "<b>Status:</b> 17 of 36 files verified at 09:19 on Nov 27. <b>Next:</b> confirm the staging log ends with 36 of 36; re-run the script if any file failed." },
     { level: "resolved", tag: "Design known",
       title: "Groups: control, SW infection, FW infection plus SW reinfection",
       body: "All fish start in fresh water and move to seawater at 40 dpi. <b>G1</b> CTRL is uninfected. <b>G2</b> SW-I is infected for the first time in seawater at 54 dpi. <b>G6</b> FW+SW-I is infected in fresh water on day 1 and reinfected in seawater at 54 dpi. HK is head kidney, sampled 14 days after the seawater challenge (day 68). Recorded in <code>data/samples.tsv</code>.",
@@ -44,6 +40,10 @@ const DATA = {
       title: "Low depth per library: 3.5–5.0× raw",
       body: "Each library has 10.5–14.9 Gb, half the yield per library of the earlier salmon vaccine WGBS project. That project kept about 88% of bases after trimming and mapped about 72% of pairs uniquely, so expect about half the raw depth to survive duplicate removal: roughly 2× per CpG per library with both strands merged (an estimate, not measured). At that depth only about 5–10% of CpGs would have 5 or more reads in a given library, so single-CpG calls per library are not feasible. Summed over the six libraries of a group it is about 12×.",
       action: "<b>Decided Nov 27:</b> run one library through the whole pipeline first to measure real CpG coverage and duplication. Analyse regions and windows, not single CpGs: DSS smoothing across six replicates, and counts summed over 500–1,000 bp tiles and gene features. Ask Macrogen whether the libraries can be sequenced deeper." },
+    { level: "resolved", tag: "Done",
+      title: "Raw data secured before the links expire",
+      body: "The Macrogen download links expire about Dec 10. All 36 files were downloaded to gannet on Nov 27 and every md5sum matches the provider's.",
+      action: "" },
     { level: "resolved", tag: "Setup done",
       title: "Hyak, gannet and tools are connected",
       body: "Preflight on klone passes. Hyak reads raw reads from gannet over https and pushes results back by passwordless ssh; the first job did both unattended. The lab container lacked cutadapt, so cutadapt 5.2 is installed in lab group storage and run with the container's Python.",
@@ -55,15 +55,15 @@ const DATA = {
     { level: "info", tag: "Raw QC, G1_HK1",
       title: "Adaptase tail confirmed; 15 bp clip is slightly short",
       body: "In <code>G1_HK1</code> the R2 5′ end is 81% G at base 1, falling to 11% over bases 10–14 and 4.1% over bases 15–19, against a baseline near 2.7%. R1 shows the matching small rise in C at its 3′ end (1.8% to 3.5%). Conversion looks as expected: C is 2% of R1 bases and G 3% of R2 bases. Only 2.7% of reads reach adapter by base 140, so few inserts are short. Read count matches Macrogen (39,489,115 pairs).",
-      action: "<b>Plan:</b> keep the tested 15 bp clip for the pilot. Leftover tail G in R2 reads as methylated C, so check the R2 M-bias plot and ignore a few more R2 bases at extraction if it shows." },
+      action: "The first 200,000 pairs gave 83.6% CpG methylation and 1.1% CHG and CHH methylation, higher than the 0.4% non-CpG seen in the vaccine project. <b>Plan:</b> keep the tested 15 bp clip for the pilot. Leftover tail G in R2 reads as methylated C, so check the R2 M-bias plot and ignore a few more R2 bases at extraction if it shows." },
     { level: "info", tag: "From the report",
       title: "Read quality is uniform across libraries",
       body: "Q30 is 93.2–94.5% and GC content 26.2–27.4% in all 18 libraries, as expected for bisulfite-converted reads. Yield ranges 1.4-fold, from 34.7 M pairs (<code>G6_HK4</code>) to 49.2 M (<code>G1_HK6</code>). No library stands out.",
       action: "" },
     { level: "info", tag: "To check",
       title: "Sequencing batch and conversion control are unknown",
-      body: "The report lists neither flowcell and lane per library nor an unmethylated lambda spike-in. If groups were sequenced on different runs, batch would be confounded with group.",
-      action: "<b>Next:</b> raw QC records flowcell and lane from the read headers; conversion will be estimated from CHH methylation." }
+      body: "The report lists neither flowcell and lane per library nor an unmethylated lambda spike-in. If groups were sequenced on different runs, batch would be confounded with group. <code>G1_HK1</code> was sequenced on flowcell 25HFNYLT4, lane 8.",
+      action: "<b>Next:</b> the raw QC array records flowcell and lane for the other 17 libraries; conversion will be estimated from CHH methylation." }
   ],
   samples: [
     { lib: "G1_HK1", group: "G1", reads: 78978230, bases: 11925712730, gc: 26.5, q20: 98.2, q30: 94.2 },
