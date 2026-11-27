@@ -16,12 +16,12 @@
 #     are no longer needed on Hyak are removed there once the push succeeds.
 #   - The dashboard links to the files on gannet.
 
-# --- set these two for your gannet project directory ----------------------
+# --- gannet project directory: /volume1/v1_web/project-ssal-ipn ------------
 # It will hold  raw/  (the 36 FASTQ files) and  output/  (results).
 # Web address of that directory (read by Hyak jobs and the dashboard):
-GANNET_WEB=${GANNET_WEB:-https://gannet.fish.washington.edu/seashell/bu-github/project-ssal-ipn}
+GANNET_WEB=${GANNET_WEB:-https://gannet.fish.washington.edu/v1_web/project-ssal-ipn}
 # The same directory as an rsync/ssh destination:
-GANNET_SSH=${GANNET_SSH:-$USER@gannet.fish.washington.edu:/volume2/web/seashell/bu-github/project-ssal-ipn}
+GANNET_SSH=${GANNET_SSH:-$USER@gannet.fish.washington.edu:/volume1/v1_web/project-ssal-ipn}
 # ---------------------------------------------------------------------------
 
 REPO=${SLURM_SUBMIT_DIR:-$(pwd)}

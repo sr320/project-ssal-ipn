@@ -38,7 +38,7 @@ Gannet holds the data; Hyak (klone) only computes.
 
 ### Set up once
 
-1. Choose a gannet directory that is served on the web, and set `GANNET_WEB` and `GANNET_SSH` at the top of `code/00-config.sh`. The values there now are placeholders.
+1. The gannet project directory is `/volume1/v1_web/project-ssal-ipn`, read by Hyak at `https://gannet.fish.washington.edu/v1_web/project-ssal-ipn` (`GANNET_SSH` and `GANNET_WEB` at the top of `code/00-config.sh`). `GANNET_SSH` logs in with your klone username; change it there if your gannet username differs.
 2. On gannet (or a machine with it mounted), inside tmux: `bash code/01-download-to-gannet.sh <that directory>/raw`.
 3. For jobs to push results themselves, klone needs a passwordless ssh key for gannet. Without one, jobs leave results on scrubbed and `code/07-archive-to-gannet.sh` (which asks for the password) moves them.
 
