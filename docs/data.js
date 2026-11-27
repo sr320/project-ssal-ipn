@@ -2,7 +2,7 @@
    status: done | running | next | planned | blocked
    level:  serious | warning | info | resolved                        */
 const DATA = {
-  updated: "2026-11-27, workflow planned, no jobs run yet",
+  updated: "2026-11-27 08:30 PST, raw reads downloading to gannet",
   reports: [
     // Extra links for the Resources list. MultiQC links are added
     // automatically once code/06-collect-metrics.sh has pushed the reports.
@@ -12,8 +12,8 @@ const DATA = {
       detail: "Macrogen order HN00292532: 18 paired-end libraries (36 FASTQ files, 85 GB compressed), 2 × 151 bp, Accel-NGS Methyl-Seq. Per-library yield and quality taken from the report." },
     { title: "Workflow plan and Hyak scripts", status: "done", when: "Scripts not yet run",
       detail: "Plan in the README; scripts <code>code/00</code>–<code>07</code> drafted. Reads are staged on gannet and streamed to Hyak one library at a time; jobs run on the checkpoint partition and push results back to gannet. Only the syntax and the file-handling logic have been tested, off Hyak." },
-    { title: "Stage raw reads on gannet", status: "next", when: "Links expire about Dec 10",
-      detail: "<code>01-download-to-gannet.sh</code>, run on gannet (not Hyak), downloads all 36 files and checks each against Macrogen's md5sum. Hyak never holds more than the libraries being processed." },
+    { title: "Stage raw reads on gannet", status: "running", when: "Started Nov 27 08:27",
+      detail: "<code>01-download-to-gannet.sh</code> is running on gannet, downloading all 36 files (85 GB) to <code>/volume1/v1_web/project-ssal-ipn/raw</code> and checking each against Macrogen's md5sum. Files appear in the <a href=\"https://gannet.fish.washington.edu/v1_web/project-ssal-ipn/raw/\">raw folder on gannet</a> as they arrive. Done when the log reads 36 of 36 verified. Hyak never holds more than the libraries being processed." },
     { title: "Reference genome and bisulfite index", status: "next", when: "Can run alongside staging",
       detail: "<code>03-genome-index.sh</code>: Ssal_v3.1 (GCF_905237065.1) and the Bismark bowtie2 index. Runs on the lab partition because the build cannot resume after a checkpoint preemption. A copy goes to gannet." },
     { title: "Raw read QC", status: "planned",
@@ -34,8 +34,8 @@ const DATA = {
   findings: [
     { level: "serious", tag: "Deadline",
       title: "Download links expire two weeks after delivery",
-      body: "The Macrogen report says the links stop working two weeks after release. The report is dated Nov 26, so the cut-off is about Dec 10; the exact date is not stated. Nothing has been downloaded yet.",
-      action: "<b>Next:</b> run <code>code/01-download-to-gannet.sh</code> on gannet and confirm 36 of 36 md5 checks." },
+      body: "The Macrogen report says the links stop working two weeks after release. The report is dated Nov 26, so the cut-off is about Dec 10; the exact date is not stated. The download to gannet started Nov 27 and is in progress.",
+      action: "<b>Next:</b> confirm the staging log ends with 36 of 36 files verified; re-run the script if any file failed." },
     { level: "serious", tag: "Missing metadata",
       title: "Group identities are not recorded",
       body: "Libraries are named G1, G2 and G6 with HK1–HK6 in each. The report does not say what the groups are (for example control, infected, timepoint or family), whether HK means head kidney, whether each library is one fish, or why the numbering skips G3–G5.",
@@ -45,9 +45,9 @@ const DATA = {
       body: "Each library has 10.5–14.9 Gb, half the yield per library of the earlier salmon vaccine WGBS project. That project kept about 88% of bases after trimming and mapped about 72% of pairs uniquely, so expect about half the raw depth to survive duplicate removal: roughly 2× per CpG per library with both strands merged (an estimate, not measured). At that depth only about 5–10% of CpGs would have 5 or more reads in a given library, so single-CpG calls per library are not feasible. Summed over the six libraries of a group it is about 12×.",
       action: "<b>Decided Nov 27:</b> run one library through the whole pipeline first to measure real CpG coverage and duplication. Analyse regions and windows, not single CpGs: DSS smoothing across six replicates, and counts summed over 500–1,000 bp tiles and gene features. Ask Macrogen whether the libraries can be sequenced deeper." },
     { level: "warning", tag: "Setup needed",
-      title: "Gannet web address and ssh access not yet confirmed",
-      body: "The scripts need a gannet directory that Hyak can read over https and write to with rsync. The directory is <code>/volume1/v1_web/project-ssal-ipn</code>; its web address is assumed to be <code>gannet.fish.washington.edu/v1_web/project-ssal-ipn</code> and has not been checked. Jobs can only push results themselves if klone has a passwordless ssh key for gannet; otherwise results wait on scrubbed, which deletes files after 30 days.",
-      action: "<b>Next:</b> run <code>code/00-preflight.sh</code> on klone, which checks both. Without a key, run <code>code/07-archive-to-gannet.sh</code> by hand after each stage." },
+      title: "Passwordless ssh from Hyak to gannet not yet set up",
+      body: "The scripts need a gannet directory that Hyak can read over https and write to with rsync. The directory is <code>/volume1/v1_web/project-ssal-ipn</code>; its web address <code>gannet.fish.washington.edu/v1_web/project-ssal-ipn</code> is confirmed working. Jobs can only push results themselves if klone has a passwordless ssh key for gannet; otherwise results wait on scrubbed, which deletes files after 30 days.",
+      action: "<b>Next:</b> run <code>code/00-preflight.sh</code> on klone, which checks for the key. Without a key, run <code>code/07-archive-to-gannet.sh</code> by hand after each stage." },
     { level: "info", tag: "Scheduling",
       title: "Checkpoint jobs are requeued every 4–5 hours",
       body: "Hyak stops and requeues checkpoint jobs every 4–5 hours and can preempt them at any time. Alignment is therefore split into 10-million-pair chunks with a marker after each. The genome index build and methylation extraction cannot resume part-way.",
