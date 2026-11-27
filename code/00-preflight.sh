@@ -6,7 +6,7 @@ echo "container: ${SIF:-NOT FOUND}"
 echo "work dir:  $WORK"
 echo "core dir:  $CORE  (genome index: $([ -f "$GENOME_DIR/index.done" ] && echo built || echo not built yet))"
 ok=1
-for p in fastqc multiqc cutadapt bismark bismark_genome_preparation \
+for p in fastqc multiqc bismark bismark_genome_preparation \
          deduplicate_bismark bismark_methylation_extractor coverage2cytosine \
          bowtie2 samtools; do
   if run bash -c "command -v $p" >/dev/null 2>&1; then
@@ -15,6 +15,11 @@ for p in fastqc multiqc cutadapt bismark bismark_genome_preparation \
     printf '  MISSING  %s\n' "$p"; ok=0
   fi
 done
+if v=$(cutadapt_run --version 2>/dev/null); then
+  printf '  ok       cutadapt %s\n' "$v"
+else
+  echo "  MISSING  cutadapt  (install it with  bash code/00-install-cutadapt.sh)"; ok=0
+fi
 first=$(all_samples | head -1)_1.fastq.gz
 if wget --spider --quiet "$GANNET_WEB/raw/$first"; then
   echo "  ok       raw reads on gannet ($GANNET_WEB/raw)"

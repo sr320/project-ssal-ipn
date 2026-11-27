@@ -53,12 +53,12 @@ r1=$TRIM/${s}_1.trimmed.fastq.gz; r2=$TRIM/${s}_2.trimmed.fastq.gz
 #    pass 2: clip R1 3' end; drop pairs shorter than 20 bp
 if [ ! -f "$TRIM/$s.trim.done" ]; then
   fetch_raw "$s"
-  run cutadapt -j "$t" --interleaved \
+  cutadapt_run -j "$t" --interleaved \
     -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
     -A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
     --nextseq-trim 20 -U "$CLIP" \
     "$RAW/${s}_1.fastq.gz" "$RAW/${s}_2.fastq.gz" 2> "$TRIM/$s.pass1.log" |
-  run cutadapt -j "$t" --interleaved -u "-$CLIP" -m 20 -o "$r1" -p "$r2" - \
+  cutadapt_run -j "$t" --interleaved -u "-$CLIP" -m 20 -o "$r1" -p "$r2" - \
     > "$TRIM/$s.pass2.log" 2>&1
   touch "$TRIM/$s.trim.done"
   drop_raw "$s"

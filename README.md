@@ -49,6 +49,7 @@ ssh klone.hyak.uw.edu
 cd /gscratch/scrubbed/$USER
 git clone https://github.com/sr320/project-ssal-ipn.git && cd project-ssal-ipn
 mkdir -p logs
+bash code/00-install-cutadapt.sh       # once, on a compute node (salloc); the container lacks cutadapt
 bash code/00-preflight.sh              # everything must say ok
 sbatch code/03-genome-index.sh         # can start before the reads are staged
 sbatch code/02-fastqc-raw.sh
@@ -126,7 +127,6 @@ Scrubbed deletes files 30 days after creation, so the merged coverage files may 
 
 The trimming and Bismark settings come from the tested scripts in [project-salmon-vaccine-wgbs](https://github.com/sr320/project-salmon-vaccine-wgbs) (same kit, same genome). The SLURM wrapping, gannet streaming and chunked alignment are new. They pass `bash -n`, and the gannet push and metrics logic were tested against mock files, but **nothing has been run on Hyak**. To confirm on the first run:
 
-- the container provides cutadapt, Bismark, FastQC and MultiQC (`00-preflight.sh` checks);
 - compute nodes can reach gannet and NCBI over https, and gannet over ssh;
 - the output file names of `deduplicate_bismark --multiple` and the extractor match what `05-extract.sh` and the archive step expect (run one library through first: `--array=1`);
 - the cores and memory requested suit ckpt.

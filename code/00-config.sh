@@ -27,8 +27,8 @@ GANNET_SSH=${GANNET_SSH:-$USER@gannet.fish.washington.edu:/volume1/v1_web/projec
 REPO=${SLURM_SUBMIT_DIR:-$(pwd)}
 
 # Core files that must persist (genome index, extra tools) live in the lab's
-# group storage, which is not scrubbed. It is a 1 TB allocation shared by
-# the lab, so only small, long-lived files go here (the index is ~20 GB).
+# group storage, which is not scrubbed. It is shared by the lab, so only
+# long-lived files go here (the index is ~20 GB).
 CORE=${CORE:-/gscratch/srlab/$USER/project-ssal-ipn}
 
 # Scratch space for everything transient; files are deleted 30 days after
@@ -51,6 +51,16 @@ GENOME_URL=https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/905/237/065/GCF_90523706
 SIF=${SIF:-$(ls -t /gscratch/srlab/containers/srlab-*bioinformatics-container*.sif 2>/dev/null | head -1)}
 run() {  # run a program inside the container
   apptainer exec --bind /mmfs1/home/ --bind /mmfs1/gscratch/ --bind /gscratch/ "$SIF" "$@"
+}
+
+# cutadapt is not in the lab container; code/00-install-cutadapt.sh puts it
+# in $CORE/tools/cutadapt and this runs it with the container's Python.
+cutadapt_run() {
+  if [ -f "$CORE/tools/cutadapt/PYTHON" ]; then
+    run env PYTHONPATH="$CORE/tools/cutadapt" "$(cat "$CORE/tools/cutadapt/PYTHON")" -m cutadapt "$@"
+  else
+    run cutadapt "$@"
+  fi
 }
 
 # Sample name for an array task (1-18), or all sample names.
