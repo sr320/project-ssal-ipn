@@ -2,7 +2,7 @@
    status: done | running | next | planned | blocked
    level:  serious | warning | info | resolved                        */
 const DATA = {
-  updated: "2026-11-27 13:30 PST, raw QC done for all 18 libraries; pilot library deduplicating",
+  updated: "2026-11-27 13:40 PST, pilot library aligned (72.9% unique), now deduplicating",
   reports: [
     // Extra links for the Resources list. MultiQC links are added
     // automatically once code/06-collect-metrics.sh has pushed the reports.
@@ -19,7 +19,7 @@ const DATA = {
     { title: "Raw read QC", status: "done", when: "Nov 27",
       detail: "FastQC on all 36 files, each library pulled from gannet and deleted afterwards. Read counts match the Macrogen report and per-base quality passes in every file. All 18 libraries share one flowcell and lane. Per-library FastQC reports are linked in the table below, and the combined <a href=\"https://gannet.fish.washington.edu/v1_web/project-ssal-ipn/output/qc/multiqc-raw/multiqc_report.html\">MultiQC report</a> is on gannet." },
     { title: "One-library pilot", status: "running", when: "Deduplicating",
-      detail: "<code>G1_HK1</code> through the whole pipeline, streamed from gannet. Fragment-length test: unique mapping was 73.1% with a 1,000 bp maximum fragment length against 68.3% at Bismark's 500 bp default, so 1,000 is used. All four alignment chunks (39.5 M pairs) finished in about 2 h 10 min on ckpt without preemption; deduplication started at 13:16. M-bias and extraction follow, giving measured duplication and CpG coverage." },
+      detail: "<code>G1_HK1</code> through the whole pipeline, streamed from gannet. Trimming kept 99.0% of pairs and 87.9% of bases. Alignment with a 1,000 bp maximum fragment length (chosen from a 200,000-pair test: 73.1% against 68.3% at 500 bp) mapped 28.5 of 39.1 M pairs uniquely, 72.9%, with the four chunks agreeing within 0.7 points. CpG methylation is 83.7%; CHG and CHH are 1.1%. Alignment took about 2 h 10 min on ckpt without preemption. Deduplication started at 13:16; M-bias and extraction follow, giving the duplication rate and measured CpG coverage." },
     { title: "Trim, align, deduplicate", status: "planned",
       detail: "<code>04-trim-align-dedup.sh</code> (array of 18, ckpt): per library, fetch from gannet, trim adapters and the adaptase tail, align with Bismark in 10-million-pair chunks so a preempted job repeats at most one chunk, remove duplicates across chunks, write M-bias. Raw reads, trimmed reads and chunk BAMs are deleted at the end." },
     { title: "Methylation extraction and archive", status: "planned",
@@ -38,7 +38,7 @@ const DATA = {
       action: "<b>Still to confirm:</b> one fish per library and fish IDs; tank per group (one tank per group would confound tank with treatment); whether G1 had a mock challenge; IPNV strain and dose; whether G6 fish still carried virus before the SW challenge." },
     { level: "warning", tag: "Sequencing depth",
       title: "Low depth per library: 3.5–5.0× raw",
-      body: "Each library has 10.5–14.9 Gb, half the yield per library of the earlier salmon vaccine WGBS project. That project kept about 88% of bases after trimming and mapped about 72% of pairs uniquely, so expect about half the raw depth to survive duplicate removal: roughly 2× per CpG per library with both strands merged (an estimate, not measured). At that depth only about 5–10% of CpGs would have 5 or more reads in a given library, so single-CpG calls per library are not feasible. Summed over the six libraries of a group it is about 12×.",
+      body: "Each library has 10.5–14.9 Gb, half the yield per library of the earlier salmon vaccine WGBS project. The pilot library <code>G1_HK1</code> kept 87.9% of bases after trimming and mapped 72.9% of pairs uniquely, matching that project, so if about 20% of alignments are duplicates, about half the raw depth survives: roughly 2× per CpG per library with both strands merged (an estimate, not measured). At that depth only about 5–10% of CpGs would have 5 or more reads in a given library, so single-CpG calls per library are not feasible. Summed over the six libraries of a group it is about 12×.",
       action: "<b>Decided Nov 27:</b> run one library through the whole pipeline first to measure real CpG coverage and duplication. Analyse regions and windows, not single CpGs: DSS smoothing across six replicates, and counts summed over 500–1,000 bp tiles and gene features. Ask Macrogen whether the libraries can be sequenced deeper." },
     { level: "resolved", tag: "Done",
       title: "Raw data secured before the links expire",
@@ -54,7 +54,7 @@ const DATA = {
       action: "<b>Fallback:</b> a library that keeps restarting on ckpt can be resubmitted on <code>srlab</code>/<code>cpu-g2-mem2x</code>, <code>coenv</code>/<code>compute</code>, or <code>coenv</code>/<code>cpu-g2</code> (up to 28 CPUs) when they free up." },
     { level: "info", tag: "Raw QC, all libraries",
       title: "Adaptase tail in every library; slightly longer in four G2 libraries",
-      body: "R2 starts about 81% G in all 18 libraries, falling to 10–13% over bases 10–14 and 3.9–5.7% over bases 15–19, against a baseline near 2.5% that is reached by about base 30. <code>G2_HK3</code> to <code>G2_HK6</code> sit about one point above the others through bases 15–24 (5.2–5.7% against 3.9–4.8%). Leftover tail G in R2 reads as methylated C, so an uneven tail could bias one group. Adapter read-through by base 140 is 2.2–4.4%, so short inserts are rare. The first 200,000 pairs of <code>G1_HK1</code> gave 83.6% CpG and 1.1% non-CpG methylation.",
+      body: "R2 starts about 81% G in all 18 libraries, falling to 10–13% over bases 10–14 and 3.9–5.7% over bases 15–19, against a baseline near 2.5% that is reached by about base 30. <code>G2_HK3</code> to <code>G2_HK6</code> sit about one point above the others through bases 15–24 (5.2–5.7% against 3.9–4.8%). Leftover tail G in R2 reads as methylated C, so an uneven tail could bias one group. Adapter read-through by base 140 is 2.2–4.4%, so short inserts are rare. Across the whole of <code>G1_HK1</code>, non-CpG methylation is 1.1%, against 0.4% in the vaccine project; that is either leftover tail or conversion nearer 98.9% than 99.6%.",
       action: "<b>Plan:</b> use the pilot's R2 M-bias plot to choose between clipping 20 bp instead of 15 and ignoring extra R2 bases at extraction, then apply the same setting to all libraries. <b>Ask the collaborator</b> whether G2_HK3–6 were prepared as a separate batch." },
     { level: "info", tag: "From the report",
       title: "Read quality is uniform across libraries",

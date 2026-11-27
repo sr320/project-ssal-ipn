@@ -2,7 +2,7 @@
 window.GANNET = "https://gannet.fish.washington.edu/v1_web/project-ssal-ipn/output";
 window.MULTIQC = { raw: true, onGannet: true };
 window.METRICS = {
-  "G1_HK1": { rawqc: true, trimKept: 99.0, },
+  "G1_HK1": { rawqc: true, trimKept: 99.0, mapping: 72.9, cpg: 83.7, chh: 1.1, },
   "G1_HK2": { rawqc: true, },
   "G1_HK3": { rawqc: true, },
   "G1_HK4": { rawqc: true, },
