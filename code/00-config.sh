@@ -19,15 +19,15 @@
 # --- set these two for your gannet project directory ----------------------
 # It will hold  raw/  (the 36 FASTQ files) and  output/  (results).
 # Web address of that directory (read by Hyak jobs and the dashboard):
-GANNET_WEB=${GANNET_WEB:-https://gannet.fish.washington.edu/seashell/bu-github/project-ssal-ipvn}
+GANNET_WEB=${GANNET_WEB:-https://gannet.fish.washington.edu/seashell/bu-github/project-ssal-ipn}
 # The same directory as an rsync/ssh destination:
-GANNET_SSH=${GANNET_SSH:-$USER@gannet.fish.washington.edu:/volume2/web/seashell/bu-github/project-ssal-ipvn}
+GANNET_SSH=${GANNET_SSH:-$USER@gannet.fish.washington.edu:/volume2/web/seashell/bu-github/project-ssal-ipn}
 # ---------------------------------------------------------------------------
 
 REPO=${SLURM_SUBMIT_DIR:-$(pwd)}
 
 # Scratch space: 5 TB per user, files deleted 30 days after creation.
-WORK=${WORK:-/gscratch/scrubbed/$USER/project-ssal-ipvn}
+WORK=${WORK:-/gscratch/scrubbed/$USER/project-ssal-ipn}
 RAW=$WORK/raw                      # transient, one library per job
 TRIM=$WORK/trim                    # reads transient; logs kept
 ALN=$WORK/bismark                  # chunk BAMs transient; reports kept

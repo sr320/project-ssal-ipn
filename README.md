@@ -73,7 +73,7 @@ sbatch --array=1 --export=ALL,RAW_SOURCE=macrogen,SUBSET=200000,MAXINS=1000 code
 grep "Mapping efficiency" logs/04-trim-align_*    # pick MAXINS
 sbatch --array=1 --export=ALL,RAW_SOURCE=macrogen code/04-trim-align-dedup.sh
 sbatch --array=1 code/05-extract.sh               # after 04 finishes
-cat /gscratch/scrubbed/$USER/project-ssal-ipvn/methylation/G1_HK1.coverage.tsv
+cat /gscratch/scrubbed/$USER/project-ssal-ipn/methylation/G1_HK1.coverage.tsv
 bash code/06-collect-metrics.sh                   # then commit and push
 ```
 

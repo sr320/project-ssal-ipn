@@ -1,7 +1,7 @@
 #!/bin/bash
 # Stage the raw reads on gannet. NOT a Hyak job: run it on gannet, or on a
 # machine with the gannet volume mounted, inside tmux/screen:
-#   bash code/01-download-to-gannet.sh /path/to/gannet/project-ssal-ipvn/raw
+#   bash code/01-download-to-gannet.sh /path/to/gannet/project-ssal-ipn/raw
 # Downloads the 36 FASTQ files from Macrogen (85 GB) and checks each against
 # the provider's md5sum. Safe to re-run: verified files are skipped and
 # partial downloads resume. The links expire two weeks after the report
