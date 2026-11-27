@@ -213,7 +213,7 @@
   <div>
     <p class="eyebrow">Analysis dashboard</p>
     <h1>Salmon IPNV WGBS</h1>
-    <p class="sub">DNA methylation response of Atlantic salmon (<i>Salmo salar</i>) to infectious pancreatic necrosis virus, by whole-genome bisulfite sequencing of 18 libraries in three groups.</p>
+    <p class="sub">DNA methylation response of Atlantic salmon (<i>Salmo salar</i>) to infectious pancreatic necrosis virus, by whole-genome bisulfite sequencing of head kidney from 18 fish in three groups: uninfected control (G1), first infection in seawater (G2), and infection in fresh water followed by reinfection in seawater (G6).</p>
   </div>
   <div class="meta">
     <div id="updated"></div>
@@ -321,7 +321,7 @@ const doneSteps = DATA.steps.filter((s) => s.status === "done").length;
 const current = DATA.steps.find((s) => s.status === "running") || DATA.steps.find((s) => s.status === "next");
 const open = DATA.findings.filter((f) => f.level === "serious" || f.level === "warning");
 const kpis = [
-  { label: "Libraries", value: S.length, note: "3 groups × 6 (G1, G2, G6)" },
+  { label: "Libraries", value: S.length, note: "3 groups × 6: CTRL, SW-I, FW+SW-I" },
   { label: "Sequence yield", value: totalGb.toFixed(0) + " Gb", note: `${Math.min(...depths).toFixed(1)}–${Math.max(...depths).toFixed(1)}× raw depth per library` },
   { label: "Pipeline steps done", value: doneSteps + " / " + DATA.steps.length, note: current ? current.title + (current.status === "running" ? " in progress" : " next") : "" },
   { label: "Open issues", value: open.length, note: open.filter((f) => f.level === "serious").length + " need action now" }

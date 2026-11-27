@@ -7,10 +7,28 @@ DNA methylation response of Atlantic salmon (*Salmo salar*) to infectious pancre
 ## Data
 
 - Macrogen order HN00292532, delivered 2026-11-26. Report in `20261126_HN00292532_WGB_Report/`.
-- 18 libraries: groups G1, G2, G6 with six libraries each (HK1–HK6). **What the groups are is not yet recorded**; fill in `data/samples.tsv`.
+- 18 libraries: groups G1, G2, G6 with six libraries each (HK1–HK6, head kidney). Design in `data/samples.tsv` and below.
 - Paired-end 2 × 151 bp, Accel-NGS Methyl-Seq library kit, EZ DNA Methylation-Gold conversion.
 - 36 FASTQ files, 85 GB compressed, 218 Gb of sequence. 34.7–49.2 M read pairs per library, about 3.5–5.0× raw depth of the ~3 Gb genome.
 - Download links and md5sums: `20261126_HN00292532_WGB_Report/assets/spgs/HN00292532_18samples_md5sum_DownloadLink.txt`. **Links expire two weeks after delivery (about 2026-12-10).**
+
+## Experimental design
+
+Fish were acclimated in fresh water (FW), moved to seawater (SW) at 40 days post infection (dpi, counted from the FW challenge on day 1), and all sampled for head kidney 14 days after the SW challenge (day 68).
+
+| Group | Label | IPNV in FW (day 1) | IPNV in SW (54 dpi) | What it represents |
+|---|---|---|---|---|
+| G1 | CTRL | no | no | Uninfected control |
+| G2 | SW-I | no | yes | First infection, in seawater |
+| G6 | FW+SW-I | yes | yes | Infected in fresh water, reinfected in seawater |
+
+Contrasts for differential methylation:
+
+- **G2 vs G1**: response to a primary IPNV infection in SW, 14 days in.
+- **G6 vs G1**: response to reinfection in fish with a prior FW infection.
+- **G6 vs G2**: effect of the earlier FW infection on the response to the same SW challenge (priming or lasting imprint). This is the main question the design adds.
+
+Still to confirm: one fish per library, fish IDs, tank per group (if each group was one tank, tank and group are confounded), whether G1 got a mock challenge, IPNV strain and dose, and whether G6 fish carried virus before the SW challenge. G3–G5 are presumably other trial groups that were not sequenced.
 
 ## Workflow
 
@@ -33,7 +51,7 @@ Gannet holds the data; Hyak (klone) only computes.
 | 6 | MultiQC, numbers and links for the dashboard | `code/06-collect-metrics.sh` | klone login node | `output/qc/multiqc-*/` |
 | 7 | Catch-up push of anything jobs could not send | `code/07-archive-to-gannet.sh` | klone login node | |
 | 8 | Sample QC: coverage, correlation, PCA | to write | Hyak job (R) | |
-| 9 | Differential methylation (DSS) | to write once groups are known | Hyak job (R) | |
+| 9 | Differential methylation (DSS): G2 vs G1, G6 vs G1, G6 vs G2 | to write | Hyak job (R) | |
 | 10 | Annotation and enrichment | to write | Hyak job / local | |
 
 ### Set up once

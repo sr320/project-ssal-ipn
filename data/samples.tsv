@@ -1,19 +1,19 @@
-sample	group	replicate	tissue	treatment	timepoint
-G1_HK1	G1	1	TODO	TODO	TODO
-G1_HK2	G1	2	TODO	TODO	TODO
-G1_HK3	G1	3	TODO	TODO	TODO
-G1_HK4	G1	4	TODO	TODO	TODO
-G1_HK5	G1	5	TODO	TODO	TODO
-G1_HK6	G1	6	TODO	TODO	TODO
-G2_HK1	G2	1	TODO	TODO	TODO
-G2_HK2	G2	2	TODO	TODO	TODO
-G2_HK3	G2	3	TODO	TODO	TODO
-G2_HK4	G2	4	TODO	TODO	TODO
-G2_HK5	G2	5	TODO	TODO	TODO
-G2_HK6	G2	6	TODO	TODO	TODO
-G6_HK1	G6	1	TODO	TODO	TODO
-G6_HK2	G6	2	TODO	TODO	TODO
-G6_HK3	G6	3	TODO	TODO	TODO
-G6_HK4	G6	4	TODO	TODO	TODO
-G6_HK5	G6	5	TODO	TODO	TODO
-G6_HK6	G6	6	TODO	TODO	TODO
+sample	group	condition	replicate	tissue	fw_ipnv_day1	sw_ipnv_54dpi	sampled	fish_id
+G1_HK1	G1	CTRL	1	head_kidney	no	no	68dpi_SW	TODO
+G1_HK2	G1	CTRL	2	head_kidney	no	no	68dpi_SW	TODO
+G1_HK3	G1	CTRL	3	head_kidney	no	no	68dpi_SW	TODO
+G1_HK4	G1	CTRL	4	head_kidney	no	no	68dpi_SW	TODO
+G1_HK5	G1	CTRL	5	head_kidney	no	no	68dpi_SW	TODO
+G1_HK6	G1	CTRL	6	head_kidney	no	no	68dpi_SW	TODO
+G2_HK1	G2	SW-I	1	head_kidney	no	yes	68dpi_SW	TODO
+G2_HK2	G2	SW-I	2	head_kidney	no	yes	68dpi_SW	TODO
+G2_HK3	G2	SW-I	3	head_kidney	no	yes	68dpi_SW	TODO
+G2_HK4	G2	SW-I	4	head_kidney	no	yes	68dpi_SW	TODO
+G2_HK5	G2	SW-I	5	head_kidney	no	yes	68dpi_SW	TODO
+G2_HK6	G2	SW-I	6	head_kidney	no	yes	68dpi_SW	TODO
+G6_HK1	G6	FW+SW-I	1	head_kidney	yes	yes	68dpi_SW	TODO
+G6_HK2	G6	FW+SW-I	2	head_kidney	yes	yes	68dpi_SW	TODO
+G6_HK3	G6	FW+SW-I	3	head_kidney	yes	yes	68dpi_SW	TODO
+G6_HK4	G6	FW+SW-I	4	head_kidney	yes	yes	68dpi_SW	TODO
+G6_HK5	G6	FW+SW-I	5	head_kidney	yes	yes	68dpi_SW	TODO
+G6_HK6	G6	FW+SW-I	6	head_kidney	yes	yes	68dpi_SW	TODO

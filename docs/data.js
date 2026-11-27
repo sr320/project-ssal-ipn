@@ -2,7 +2,7 @@
    status: done | running | next | planned | blocked
    level:  serious | warning | info | resolved                        */
 const DATA = {
-  updated: "2026-11-27 09:25 PST, pilot library running on Hyak; raw reads 17 of 36 staged",
+  updated: "2026-11-27, experimental design recorded; pilot library running on Hyak",
   reports: [
     // Extra links for the Resources list. MultiQC links are added
     // automatically once code/06-collect-metrics.sh has pushed the reports.
@@ -26,8 +26,8 @@ const DATA = {
       detail: "<code>05-extract.sh</code> (array of 18, ckpt): per-context calls, genome-wide CpG report and strand-merged CpG coverage per library, with ignore settings chosen from M-bias. The deduplicated BAM and large outputs then move to gannet and are linked in the table below." },
     { title: "Sample-level QC", status: "planned",
       detail: "CpG coverage distribution per library, correlation and PCA across the 18 libraries, outlier and batch checks. Decides the coverage filter for testing." },
-    { title: "Differential methylation", status: "blocked", when: "Needs group definitions",
-      detail: "DSS with smoothing on Hyak, six libraries per group, from the merged CpG coverage files. The contrasts (pairwise, or a multi-factor model) depend on what G1, G2 and G6 are. Script to be written once the design is known." },
+    { title: "Differential methylation", status: "planned",
+      detail: "DSS with smoothing on Hyak, six libraries per group, from the merged CpG coverage files. Three pairwise contrasts: G2 vs G1 (primary SW infection), G6 vs G1 (reinfection after FW infection) and G6 vs G2 (effect of the earlier FW infection on the response to the same SW challenge)." },
     { title: "Annotation and interpretation", status: "planned",
       detail: "Place DMLs and DMRs relative to genes, promoters and repeats in the Ssal_v3.1 annotation; functional enrichment; focus on antiviral and immune genes." }
   ],
@@ -36,10 +36,10 @@ const DATA = {
       title: "Download links expire two weeks after delivery",
       body: "The Macrogen report says the links stop working two weeks after release. The report is dated Nov 26, so the cut-off is about Dec 10; the exact date is not stated. The download to gannet started Nov 27 and is in progress.",
       action: "<b>Status:</b> 17 of 36 files verified at 09:19 on Nov 27. <b>Next:</b> confirm the staging log ends with 36 of 36; re-run the script if any file failed." },
-    { level: "serious", tag: "Missing metadata",
-      title: "Group identities are not recorded",
-      body: "Libraries are named G1, G2 and G6 with HK1–HK6 in each. The report does not say what the groups are (for example control, infected, timepoint or family), whether HK means head kidney, whether each library is one fish, or why the numbering skips G3–G5.",
-      action: "<b>Needed from the collaborator:</b> treatment, timepoint, tissue and fish ID per library, for <code>data/samples.tsv</code>. This blocks the differential methylation design, not the steps before it." },
+    { level: "resolved", tag: "Design known",
+      title: "Groups: control, SW infection, FW infection plus SW reinfection",
+      body: "All fish start in fresh water and move to seawater at 40 dpi. <b>G1</b> CTRL is uninfected. <b>G2</b> SW-I is infected for the first time in seawater at 54 dpi. <b>G6</b> FW+SW-I is infected in fresh water on day 1 and reinfected in seawater at 54 dpi. HK is head kidney, sampled 14 days after the seawater challenge (day 68). Recorded in <code>data/samples.tsv</code>.",
+      action: "<b>Still to confirm:</b> one fish per library and fish IDs; tank per group (one tank per group would confound tank with treatment); whether G1 had a mock challenge; IPNV strain and dose; whether G6 fish still carried virus before the SW challenge." },
     { level: "warning", tag: "Sequencing depth",
       title: "Low depth per library: 3.5–5.0× raw",
       body: "Each library has 10.5–14.9 Gb, half the yield per library of the earlier salmon vaccine WGBS project. That project kept about 88% of bases after trimming and mapped about 72% of pairs uniquely, so expect about half the raw depth to survive duplicate removal: roughly 2× per CpG per library with both strands merged (an estimate, not measured). At that depth only about 5–10% of CpGs would have 5 or more reads in a given library, so single-CpG calls per library are not feasible. Summed over the six libraries of a group it is about 12×.",
