@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=24
 #SBATCH --mem=80G
 #SBATCH --time=2-00:00:00
-#SBATCH --array=1-18
+#SBATCH --array=1-18%6
 #SBATCH --output=logs/%x_%A_%a.out
 # Methylation extraction from the deduplicated BAM of one library:
 # per-context calls, bedGraph/coverage, genome-wide CpG report, and a

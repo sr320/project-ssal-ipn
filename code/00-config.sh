@@ -26,7 +26,14 @@ GANNET_SSH=${GANNET_SSH:-$USER@gannet.fish.washington.edu:/volume1/v1_web/projec
 
 REPO=${SLURM_SUBMIT_DIR:-$(pwd)}
 
-# Scratch space: 5 TB per user, files deleted 30 days after creation.
+# Core files that must persist (genome index, extra tools) live in the lab's
+# group storage, which is not scrubbed. It is a 1 TB allocation shared by
+# the lab, so only small, long-lived files go here (the index is ~20 GB).
+CORE=${CORE:-/gscratch/srlab/$USER/project-ssal-ipn}
+
+# Scratch space for everything transient; files are deleted 30 days after
+# creation. Arrays are throttled (6 libraries at a time) to limit how much
+# sits here at once; finished files move to gannet.
 WORK=${WORK:-/gscratch/scrubbed/$USER/project-ssal-ipn}
 RAW=$WORK/raw                      # transient, one library per job
 TRIM=$WORK/trim                    # reads transient; logs kept
@@ -34,7 +41,7 @@ ALN=$WORK/bismark                  # chunk BAMs transient; reports kept
 DEDUP=$WORK/dedup                  # deduplicated BAMs, until extraction
 METH=$WORK/methylation             # per-library methylation calls
 QC=$WORK/qc
-GENOME_DIR=${GENOME_DIR:-$WORK/genome}   # Ssal_v3.1.fa.gz + Bisulfite_Genome/
+GENOME_DIR=${GENOME_DIR:-$CORE/genome}   # Ssal_v3.1.fa.gz + Bisulfite_Genome/
 
 SAMPLES=$REPO/data/samples.tsv
 LINKS=$REPO/20261126_HN00292532_WGB_Report/assets/spgs/HN00292532_18samples_md5sum_DownloadLink.txt
@@ -110,4 +117,4 @@ archive_sample() {
 }
 
 module load apptainer 2>/dev/null || true
-mkdir -p "$WORK"
+mkdir -p "$WORK" "$CORE"

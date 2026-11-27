@@ -14,8 +14,8 @@
 # build cannot resume, and ckpt stops and requeues jobs every 4-5 hours, so
 # it could restart from zero indefinitely. To try ckpt anyway:
 #   sbatch --partition=ckpt-all code/03-genome-index.sh
-# The 30-day scrub applies to the index too; a copy goes to gannet
-# (bash code/07-archive-to-gannet.sh genome  if the push here fails).
+# The index (~20 GB) is written to lab group storage ($CORE/genome in
+# code/00-config.sh), which is not scrubbed, so it is built once.
 set -euo pipefail
 source code/00-config.sh
 mkdir -p "$GENOME_DIR"
@@ -23,4 +23,3 @@ mkdir -p "$GENOME_DIR"
 [ -s "$GENOME_DIR/Ssal_v3.1.fa.gz" ] || wget --no-verbose -O "$GENOME_DIR/Ssal_v3.1.fa.gz" "$GENOME_URL"
 run bismark_genome_preparation --verbose --parallel $((SLURM_CPUS_PER_TASK / 2)) "$GENOME_DIR"
 touch "$GENOME_DIR/index.done"
-[ "$GENOME_DIR" = "$WORK/genome" ] && { to_gannet genome || echo "push to gannet failed; index stays on scrubbed only"; }

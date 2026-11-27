@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=32
 #SBATCH --mem=160G
 #SBATCH --time=3-00:00:00
-#SBATCH --array=1-18
+#SBATCH --array=1-18%6
 #SBATCH --output=logs/%x_%A_%a.out
 # One library, end to end, streaming from gannet:
 #   fetch raw reads -> trim -> FastQC -> split into chunks -> Bismark per

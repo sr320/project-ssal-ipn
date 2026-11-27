@@ -15,7 +15,7 @@ const DATA = {
     { title: "Stage raw reads on gannet", status: "running", when: "Started Nov 27 08:27",
       detail: "<code>01-download-to-gannet.sh</code> is running on gannet, downloading all 36 files (85 GB) to <code>/volume1/v1_web/project-ssal-ipn/raw</code> and checking each against Macrogen's md5sum. Files appear in the <a href=\"https://gannet.fish.washington.edu/v1_web/project-ssal-ipn/raw/\">raw folder on gannet</a> as they arrive. Done when the log reads 36 of 36 verified. Hyak never holds more than the libraries being processed." },
     { title: "Reference genome and bisulfite index", status: "next", when: "Can run alongside staging",
-      detail: "<code>03-genome-index.sh</code>: Ssal_v3.1 (GCF_905237065.1) and the Bismark bowtie2 index. Runs on the lab partition because the build cannot resume after a checkpoint preemption. A copy goes to gannet." },
+      detail: "<code>03-genome-index.sh</code>: Ssal_v3.1 (GCF_905237065.1) and the Bismark bowtie2 index. Kept in lab group storage (<code>/gscratch/srlab</code>), which is not scrubbed. Runs on the lab partition because the build cannot resume after a checkpoint preemption." },
     { title: "Raw read QC", status: "planned",
       detail: "<code>02-fastqc-raw.sh</code> (array of 18, ckpt): each task pulls one library from gannet, runs FastQC, records flowcell and lane, and deletes the reads. MultiQC links appear under Resources." },
     { title: "One-library pilot", status: "next", when: "Decides whether depth is enough",

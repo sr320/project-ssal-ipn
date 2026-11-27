@@ -27,7 +27,7 @@ Gannet holds the data; Hyak (klone) only computes.
 | 0 | Check container, gannet addresses, ssh | `code/00-preflight.sh` | klone login node | |
 | 1 | Download from Macrogen, md5 check | `code/01-download-to-gannet.sh` | **gannet** | `raw/` (36 FASTQ) |
 | 2 | Raw read QC, flowcell/lane per library | `code/02-fastqc-raw.sh` | ckpt array (18) | `output/qc/fastqc-raw/` |
-| 3 | Ssal_v3.1 genome and Bismark index | `code/03-genome-index.sh` | lab partition | `output/genome/` |
+| 3 | Ssal_v3.1 genome and Bismark index | `code/03-genome-index.sh` | lab partition | (kept in `/gscratch/srlab`) |
 | 4 | Trim, align in chunks, deduplicate, M-bias | `code/04-trim-align-dedup.sh` | ckpt array (18) | logs, reports, M-bias |
 | 5 | Methylation extraction, merged CpG coverage | `code/05-extract.sh` | ckpt array (18) | `output/methylation/`, `output/dedup/*.bam` |
 | 6 | MultiQC, numbers and links for the dashboard | `code/06-collect-metrics.sh` | klone login node | `output/qc/multiqc-*/` |
@@ -110,9 +110,9 @@ Hyak stops and requeues checkpoint jobs every 4–5 hours and can preempt them a
 | CpG report, bedGraph, coverage, per-read context files | until pushed | moved |
 | Merged CpG coverage (`*.merged_CpG_evidence.cov.gz`) | kept for differential methylation | copied |
 | FastQC, MultiQC, logs, Bismark reports, M-bias | kept (small) | copied |
-| Genome index | kept; rebuilt or re-fetched if scrubbed | copied |
+| Genome index | `/gscratch/srlab/$USER/project-ssal-ipn/genome` (group storage, not scrubbed) | not copied |
 
-Scrubbed deletes files 30 days after creation, so the merged coverage files and index may need pulling back from gannet for later steps.
+Scrubbed deletes files 30 days after creation, so the merged coverage files may need pulling back from gannet for later steps. The trim/align and extraction arrays run six libraries at a time (`%6`) to limit how much sits on scrubbed at once; my rough estimate is 30-40 GB per library in flight.
 
 ### Decision points
 

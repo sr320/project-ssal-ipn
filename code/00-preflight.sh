@@ -4,6 +4,7 @@
 source code/00-config.sh
 echo "container: ${SIF:-NOT FOUND}"
 echo "work dir:  $WORK"
+echo "core dir:  $CORE  (genome index: $([ -f "$GENOME_DIR/index.done" ] && echo built || echo not built yet))"
 ok=1
 for p in fastqc multiqc cutadapt bismark bismark_genome_preparation \
          deduplicate_bismark bismark_methylation_extractor coverage2cytosine \
