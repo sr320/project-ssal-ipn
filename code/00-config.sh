@@ -41,7 +41,7 @@ LINKS=$REPO/20261126_HN00292532_WGB_Report/assets/spgs/HN00292532_18samples_md5s
 GENOME_URL=https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/905/237/065/GCF_905237065.1_Ssal_v3.1/GCF_905237065.1_Ssal_v3.1_genomic.fna.gz
 
 # Lab bioinformatics container (newest build unless SIF is set).
-SIF=${SIF:-$(ls -t /gscratch/srlab/containers/srlab-bioinformatics-container*.sif 2>/dev/null | head -1)}
+SIF=${SIF:-$(ls -t /gscratch/srlab/containers/srlab-*bioinformatics-container*.sif 2>/dev/null | head -1)}
 run() {  # run a program inside the container
   apptainer exec --bind /mmfs1/home/ --bind /mmfs1/gscratch/ --bind /gscratch/ "$SIF" "$@"
 }
