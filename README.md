@@ -47,7 +47,7 @@ Gannet holds the data; Hyak (klone) only computes.
 ```bash
 ssh klone.hyak.uw.edu
 cd /gscratch/scrubbed/$USER
-git clone https://github.com/sr320/project-ssal-ipn.git && cd project-ssal-ipvn
+git clone https://github.com/sr320/project-ssal-ipn.git && cd project-ssal-ipn
 mkdir -p logs
 bash code/00-preflight.sh              # everything must say ok
 sbatch code/03-genome-index.sh         # can start before the reads are staged
