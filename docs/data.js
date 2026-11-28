@@ -2,7 +2,7 @@
    status: done | running | next | planned | blocked
    level:  serious | warning | info | resolved                        */
 const DATA = {
-  updated: "2026-11-27 16:20 PST, pilot library finished: mean CpG depth 2.1×, 12.7% of CpGs with 5 or more reads",
+  updated: "2026-11-27 16:35 PST, pilot finished (mean CpG depth 2.1×); other 17 libraries submitted",
   reports: [
     // Extra links for the Resources list. MultiQC links are added
     // automatically once code/06-collect-metrics.sh has pushed the reports.
@@ -20,9 +20,9 @@ const DATA = {
       detail: "FastQC on all 36 files, each library pulled from gannet and deleted afterwards. Read counts match the Macrogen report and per-base quality passes in every file. All 18 libraries share one flowcell and lane. Per-library FastQC reports are linked in the table below, and the combined <a href=\"https://gannet.fish.washington.edu/v1_web/project-ssal-ipn/output/qc/multiqc-raw/multiqc_report.html\">MultiQC report</a> is on gannet." },
     { title: "One-library pilot", status: "done", when: "Nov 27",
       detail: "<code>G1_HK1</code> through the whole pipeline, streamed from gannet. Trimming kept 99.0% of pairs and 87.9% of bases; 72.9% of pairs mapped uniquely (1,000 bp maximum fragment length); only 10.0% of alignments were duplicates, leaving 25.6 M pairs. Trimming, alignment in four chunks, deduplication and M-bias took 2 h 35 min on ckpt without preemption, and the raw reads, trimmed reads and chunk BAMs were removed from Hyak at the end. Methylation extraction (ignoring 3 bp of R1 and 9 bp of R2), the genome-wide CpG report and strand merging took a further 2 h 15 min. Result: 49.0 million CpGs in the genome, mean depth 2.1× with strands merged, 70.5% of CpGs with at least one read and 12.7% with five or more. The coverage file, CpG report, bedGraph and deduplicated BAM are on gannet, linked in the table below." },
-    { title: "Trim, align, deduplicate", status: "planned",
+    { title: "Trim, align, deduplicate", status: "running", when: "17 libraries submitted Nov 27 16:30",
       detail: "<code>04-trim-align-dedup.sh</code> (array of 18, ckpt): per library, fetch from gannet, trim adapters and the adaptase tail, align with Bismark in 10-million-pair chunks so a preempted job repeats at most one chunk, remove duplicates across chunks, write M-bias. Raw reads, trimmed reads and chunk BAMs are deleted at the end." },
-    { title: "Methylation extraction and archive", status: "planned",
+    { title: "Methylation extraction and archive", status: "running", when: "Queued behind alignment, library by library",
       detail: "<code>05-extract.sh</code> (array of 18, ckpt): per-context calls, genome-wide CpG report and strand-merged CpG coverage per library, with ignore settings chosen from M-bias. The deduplicated BAM and large outputs then move to gannet and are linked in the table below." },
     { title: "Sample-level QC", status: "planned",
       detail: "CpG coverage distribution per library, correlation and PCA across the 18 libraries, outlier and batch checks. Decides the coverage filter for testing." },
