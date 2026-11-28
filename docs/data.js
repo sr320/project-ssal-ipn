@@ -2,7 +2,7 @@
    status: done | running | next | planned | blocked
    level:  serious | warning | info | resolved                        */
 const DATA = {
-  updated: "2026-11-28 04:00 PST, all 18 libraries aligned and extracted; mean CpG depth 1.7–2.4× per library",
+  updated: "2026-11-28 05:50 PST, all 18 libraries aligned and extracted; sample QC script written",
   reports: [
     // Extra links for the Resources list. MultiQC links are added
     // automatically once code/06-collect-metrics.sh has pushed the reports.
@@ -24,8 +24,8 @@ const DATA = {
       detail: "All 18 libraries done on ckpt with no failed or preempted task, 1 h 39 min to 3 h 29 min each. Pairs kept after trimming 97.8–99.0%, unique mapping 70.1–73.5%, duplicates 9.0–13.9%. <code>04-trim-align-dedup.sh</code> (array of 18, ckpt): per library, fetch from gannet, trim adapters and the adaptase tail, align with Bismark in 10-million-pair chunks so a preempted job repeats at most one chunk, remove duplicates across chunks, write M-bias. Raw reads, trimmed reads and chunk BAMs are deleted at the end." },
     { title: "Methylation extraction and archive", status: "done", when: "Nov 28",
       detail: "All 18 libraries extracted (2 h 4 min to 2 h 34 min each) and their files moved to gannet. Mean CpG depth 1.7–2.4×; CpGs with five or more reads 9.1–16.8%. <code>05-extract.sh</code> (array of 18, ckpt): per-context calls, genome-wide CpG report and strand-merged CpG coverage per library, with ignore settings chosen from M-bias. The deduplicated BAM and large outputs then move to gannet and are linked in the table below." },
-    { title: "Sample-level QC", status: "planned",
-      detail: "CpG coverage distribution per library, correlation and PCA across the 18 libraries, outlier and batch checks. Decides the coverage filter for testing." },
+    { title: "Sample-level QC", status: "planned", when: "Script written Nov 28, not yet run",
+      detail: "<code>08-sample-qc.sh</code> (one ckpt job): sums methylated and total reads over 1 kb windows per library, then counts the windows that pass each coverage filter, and computes correlation, clustering and PCA across the 18 libraries with per-chromosome methylation, to find outliers (<code>G1_HK5</code> has lower CpG methylation) and batch structure. Decides the coverage filter for testing." },
     { title: "Differential methylation", status: "planned",
       detail: "DSS with smoothing on Hyak, six libraries per group, from the merged CpG coverage files. Three pairwise contrasts: G2 vs G1 (primary SW infection), G6 vs G1 (reinfection after FW infection) and G6 vs G2 (effect of the earlier FW infection on the response to the same SW challenge)." },
     { title: "Annotation and interpretation", status: "planned",

@@ -51,7 +51,7 @@ Gannet holds the data; Hyak (klone) only computes.
 | 2b | MultiQC across libraries | `code/02b-multiqc.sh` | ckpt job | `output/qc/multiqc-*/` |
 | 6 | Numbers and links for the dashboard | `code/06-collect-metrics.sh` | klone login node | |
 | 7 | Catch-up push of anything jobs could not send | `code/07-archive-to-gannet.sh` | klone login node | |
-| 8 | Sample QC: coverage, correlation, PCA | to write | Hyak job (R) | |
+| 8 | Sample QC on 1 kb windows: coverage filters, correlation, clustering, PCA, per-chromosome methylation | `code/08-sample-qc.sh` (calls `08-sample-qc.R`) | ckpt job | `output/qc/sample-qc/` |
 | 9 | Differential methylation (DSS): G2 vs G1, G6 vs G1, G6 vs G2 | to write | Hyak job (R) | |
 | 10 | Annotation and enrichment | to write | Hyak job / local | |
 
@@ -79,6 +79,7 @@ sbatch code/04-trim-align-dedup.sh     # full run (defaults CLIP=15, MAXINS=1000
 sbatch code/05-extract.sh              # ignores 3 bp of R1 and 9 bp of R2 (from the pilot's M-bias)
 bash code/07-archive-to-gannet.sh      # only if jobs could not push
 bash code/06-collect-metrics.sh        # then commit and push docs/ and output/
+sbatch code/08-sample-qc.sh            # after all libraries are extracted
 ```
 
 ### Pilot: one library first
