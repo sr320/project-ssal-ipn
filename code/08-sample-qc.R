@@ -187,11 +187,15 @@ for (f in plots) f()
 invisible(dev.off())
 if (isTRUE(capabilities("cairo")) || isTRUE(capabilities("png"))) {
   for (nm in names(plots)) {
-    ok <- tryCatch({
+    # A PNG device that fails to open only warns, and the plot would then go
+    # to a stray Rplots.pdf; treat the warning as failure and stop trying.
+    opened <- tryCatch({
       png(file.path(out_dir, paste0(nm, ".png")), width = 1350, height = 1050, res = 150,
           type = if (isTRUE(capabilities("cairo"))) "cairo" else getOption("bitmapType"))
-      plots[[nm]](); invisible(dev.off()); TRUE
-    }, error = function(e) { message("no PNG for ", nm, ": ", conditionMessage(e)); FALSE })
+      TRUE
+    }, warning = function(w) FALSE, error = function(e) FALSE)
+    if (!opened) { graphics.off(); unlink(file.path(out_dir, paste0(nm, ".png"))); message("PNG device not available; plots are in sample-qc.pdf only"); break }
+    plots[[nm]](); invisible(dev.off())
   }
 }
 
